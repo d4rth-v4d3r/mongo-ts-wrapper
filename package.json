@@ -1,25 +1,18 @@
 {
-    "name": "mongo-ts",
-    "version": "1.0.0",
+    "name": "mongo-ts-wrapper",
+    "version": "1.0.1",
     "description": "A wrapper for mongo collections based on sequelize-ts",
     "main": "index.js",
     "author": "juky",
     "license": "MIT",
-    "private": true,
+    "url": "https://github.com/d4rth-v4d3r/mongo-ts-wrapper.git",
     "jest": {
         "transform": {
             "^.+\\.tsx?$": "ts-jest",
             "^.+\\.js$": "babel-jest"
         },
         "testRegex": ".*\\.spec\\.js|.*\\.test\\.ts$",
-        "moduleFileExtensions": [
-            "ts",
-            "tsx",
-            "js",
-            "jsx",
-            "json",
-            "node"
-        ],
+        "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
         "transformIgnorePatterns": [
             "node_modules/(?!(react-native|my-project|react-native-button)/)"
         ],
