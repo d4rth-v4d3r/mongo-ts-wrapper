@@ -11,12 +11,10 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noImplicitReturns": true,
-        "allowJs": true,
         "types": ["reflect-metadata"],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "baseUrl": "./"
     },
-    "compileOnSave": true,
-    "include": ["../src/**/*.ts", "../test/**/*.ts"]
+    "compileOnSave": true
 }
