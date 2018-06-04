@@ -10,7 +10,8 @@ export declare class Model<T extends Model<T>> {
 export declare class Container {
     private uri;
     private client;
-    constructor(uri: string);
+    constructor(uri: string, logLevel?: string);
     addModels(models: Array<typeof Model>): Promise<any>;
+    close(): Promise<any>;
 }
 export declare const Collection: (collection: string) => (target: typeof Model) => void;

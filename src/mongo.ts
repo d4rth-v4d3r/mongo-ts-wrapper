@@ -2,7 +2,8 @@ import {
     MongoClient,
     FilterQuery,
     InsertOneWriteOpResult,
-    InsertWriteOpResult
+    InsertWriteOpResult,
+    Logger
 } from "mongodb";
 import * as _ from "lodash";
 
@@ -79,17 +80,25 @@ export class Model<T extends Model<T>> {
 export class Container {
     private client: MongoClient;
 
-    constructor(private uri: string) {
+    constructor(private uri: string, logLevel: string = "debug") {
         this.client = new MongoClient(this.uri);
+        Logger.setLevel(logLevel);
+        Logger.filter("class", ["Server"]);
     }
 
-    public addModels(models: Array<typeof Model>): Promise<any> {
+    public async addModels(models: Array<typeof Model>): Promise<any> {
+        this.client = await this.client.connect();
         return Promise.all(
-            _.map(models, async model => {
-                model.client = await this.client.connect();
+            _.map(models, model => {
+                model.client = this.client;
                 return Promise.resolve();
             })
         );
+    }
+
+    public close(): Promise<any> {
+        Logger.reset();
+        return this.client.close(true);
     }
 }
 

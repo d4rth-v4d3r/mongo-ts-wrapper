@@ -21,14 +21,18 @@ test("Testing for decorators to identify a class", async () => {
 });
 
 test("Test the mongodb container developed by juky", async () => {
-    let repository: Container = new Container(
-        "mongodb://172.23.186.104:27017/npm"
-    );
-    await repository.addModels([Unit, Testing]);
+    let repository: Container = new Container("mongodb://localhost:27017/npm");
+    try {
+        await repository.addModels([Unit, Testing]);
 
-    let dummy: Testing = { name: "asdfasdfafdas", date: new Date() };
+        let dummy: Testing = { name: "asdfasdfafdas", date: new Date() };
 
-    let result = await Testing.insertOne(dummy);
+        let result = await Testing.insertOne(dummy);
 
-    expect(result.result.ok).toBe(1);
+        expect(result.result.ok).toBe(1);
+    } catch (reason) {
+        fail(reason.message);
+    } finally {
+        await repository.close();
+    }
 });

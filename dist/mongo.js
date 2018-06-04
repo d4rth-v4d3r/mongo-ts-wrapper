@@ -71,15 +71,24 @@ class Model {
 }
 exports.Model = Model;
 class Container {
-    constructor(uri) {
+    constructor(uri, logLevel = "debug") {
         this.uri = uri;
         this.client = new mongodb_1.MongoClient(this.uri);
+        mongodb_1.Logger.setLevel(logLevel);
+        mongodb_1.Logger.filter("class", ["Server"]);
     }
     addModels(models) {
-        return Promise.all(_.map(models, (model) => __awaiter(this, void 0, void 0, function* () {
-            model.client = yield this.client.connect();
-            return Promise.resolve();
-        })));
+        return __awaiter(this, void 0, void 0, function* () {
+            this.client = yield this.client.connect();
+            return Promise.all(_.map(models, model => {
+                model.client = this.client;
+                return Promise.resolve();
+            }));
+        });
+    }
+    close() {
+        mongodb_1.Logger.reset();
+        return this.client.close(true);
     }
 }
 exports.Container = Container;

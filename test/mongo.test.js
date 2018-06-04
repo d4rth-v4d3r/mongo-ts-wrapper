@@ -33,10 +33,18 @@ test("Testing for decorators to identify a class", () => __awaiter(this, void 0,
     expect(Testing.collection).toBe(testing);
 }));
 test("Test the mongodb container developed by juky", () => __awaiter(this, void 0, void 0, function* () {
-    let repository = new mongo_1.Container("mongodb://172.23.186.104:27017/npm");
-    yield repository.addModels([Unit, Testing]);
-    let dummy = { name: "asdfasdfafdas", date: new Date() };
-    let result = yield Testing.insertOne(dummy);
-    expect(result.result.ok).toBe(1);
+    let repository = new mongo_1.Container("mongodb://localhost:27017/npm");
+    try {
+        yield repository.addModels([Unit, Testing]);
+        let dummy = { name: "asdfasdfafdas", date: new Date() };
+        let result = yield Testing.insertOne(dummy);
+        expect(result.result.ok).toBe(1);
+    }
+    catch (reason) {
+        fail(reason.message);
+    }
+    finally {
+        yield repository.close();
+    }
 }));
 //# sourceMappingURL=mongo.test.js.map
