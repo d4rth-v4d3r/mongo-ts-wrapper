@@ -1,6 +1,6 @@
 {
     "name": "mongo-ts-wrapper",
-    "version": "1.0.4",
+    "version": "1.0.8",
     "description": "A wrapper for mongo collections based on sequelize-ts",
     "author": "juky",
     "license": "MIT",
@@ -13,7 +13,7 @@
     },
     "scripts": {
         "build": "tsc --project ./dist/tsconfig.json",
-        "publish": "npm publish"
+        "publish": "yarn build & npm publish "
     },
     "jest": {
         "transform": {
