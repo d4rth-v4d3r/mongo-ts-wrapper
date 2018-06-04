@@ -3,14 +3,15 @@ import {
     FilterQuery,
     InsertOneWriteOpResult,
     InsertWriteOpResult,
-    Logger
+    Logger,
+    ObjectID
 } from "mongodb";
 import * as _ from "lodash";
 
 export class Model<T extends Model<T>> {
     public static client: MongoClient;
     public static collection: string;
-    public _id?: string;
+    public _id?: ObjectID;
 
     static async findAll<T extends Model<T>>(
         this: new () => T,

@@ -1,8 +1,8 @@
-import { MongoClient, FilterQuery, InsertOneWriteOpResult, InsertWriteOpResult } from "mongodb";
+import { MongoClient, FilterQuery, InsertOneWriteOpResult, InsertWriteOpResult, ObjectID } from "mongodb";
 export declare class Model<T extends Model<T>> {
     static client: MongoClient;
     static collection: string;
-    _id?: string;
+    _id?: ObjectID;
     static findAll<T extends Model<T>>(this: new () => T, query: FilterQuery<T>): Promise<Array<T>>;
     static findOne<T extends Model<T>>(this: new () => T, query: FilterQuery<T>): Promise<T>;
     static insertOne<T extends Model<T>>(this: new () => T, document: T): Promise<InsertOneWriteOpResult>;

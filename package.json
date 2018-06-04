@@ -1,6 +1,6 @@
 {
     "name": "mongo-ts-wrapper",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "A wrapper for mongo collections based on sequelize-ts",
     "author": "juky",
     "license": "MIT",
