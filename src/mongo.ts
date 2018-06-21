@@ -67,7 +67,7 @@ export class Model<T extends Model<T>> {
 
     static async insertMany<T extends Model<T>>(
         this: new () => T,
-        documents: Array<T>
+        documents: Array<FilterQuery<T> | T>
     ): Promise<InsertWriteOpResult> {
         let self: typeof Model = this as any;
 
