@@ -1,4 +1,4 @@
-import { MongoClient, FilterQuery, InsertOneWriteOpResult, InsertWriteOpResult, ObjectID } from "mongodb";
+import { FilterQuery, InsertOneWriteOpResult, InsertWriteOpResult, MongoClient, ObjectID, UpdateWriteOpResult, WriteOpResult } from "mongodb";
 export declare class Model<T extends Model<T>> {
     static client: MongoClient;
     static collection: string;
@@ -7,6 +7,9 @@ export declare class Model<T extends Model<T>> {
     static findOne<T extends Model<T>>(this: new () => T, query: FilterQuery<T>): Promise<T>;
     static insertOne<T extends Model<T>>(this: new () => T, document: T): Promise<InsertOneWriteOpResult>;
     static insertMany<T extends Model<T>>(this: new () => T, documents: Array<T>): Promise<InsertWriteOpResult>;
+    static updateOne<T extends Model<T>>(this: new () => T, query: FilterQuery<T>, newUpdateValues: Object): Promise<UpdateWriteOpResult>;
+    static updateMany<T extends Model<T>>(this: new () => T, query: FilterQuery<T>, newUpdateValues: Object): Promise<UpdateWriteOpResult>;
+    static remove<T extends Model<T>>(this: new () => T, document: FilterQuery<T>): Promise<WriteOpResult>;
 }
 export declare class Container {
     private uri;

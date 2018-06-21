@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongodb_1 = require("mongodb");
 const _ = require("lodash");
+const mongodb_1 = require("mongodb");
 class Model {
     static findAll(query) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -62,6 +62,48 @@ class Model {
                     .db()
                     .collection(self.collection)
                     .insertMany(documents);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static updateOne(query, newUpdateValues) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .updateOne(query, newUpdateValues, { upsert: true });
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static updateMany(query, newUpdateValues) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .updateOne(query, newUpdateValues, { upsert: true });
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static remove(document) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .remove(document);
             }
             catch (reason) {
                 return Promise.reject(reason);

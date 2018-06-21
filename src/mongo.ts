@@ -1,12 +1,15 @@
+import * as _ from "lodash";
+
 import {
-    MongoClient,
     FilterQuery,
     InsertOneWriteOpResult,
     InsertWriteOpResult,
     Logger,
-    ObjectID
+    MongoClient,
+    ObjectID,
+    UpdateWriteOpResult,
+    WriteOpResult
 } from "mongodb";
-import * as _ from "lodash";
 
 export class Model<T extends Model<T>> {
     public static client: MongoClient;
@@ -73,6 +76,56 @@ export class Model<T extends Model<T>> {
                 .db()
                 .collection(self.collection)
                 .insertMany(documents);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async updateOne<T extends Model<T>>(
+        this: new () => T,
+        query: FilterQuery<T>,
+        newUpdateValues: Object
+    ): Promise<UpdateWriteOpResult> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .updateOne(query, newUpdateValues, { upsert: true });
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async updateMany<T extends Model<T>>(
+        this: new () => T,
+        query: FilterQuery<T>,
+        newUpdateValues: Object
+    ): Promise<UpdateWriteOpResult> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .updateOne(query, newUpdateValues, { upsert: true });
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async remove<T extends Model<T>>(
+        this: new () => T,
+        document: FilterQuery<T>
+    ): Promise<WriteOpResult> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .remove(document);
         } catch (reason) {
             return Promise.reject(reason);
         }
