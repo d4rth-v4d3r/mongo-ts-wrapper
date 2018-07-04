@@ -1,11 +1,12 @@
 {
     "name": "mongo-ts-wrapper",
-    "version": "2.0.2",
+    "version": "2.0.6",
     "description": "A wrapper for mongo collections inspired in sequelize-ts",
     "author": "juky",
     "license": "MIT",
     "main": "dist/mongo.js",
     "types": "dist/mongo.d.ts",
+    "readme": "README.md",
     "url": "https://github.com/d4rth-v4d3r/mongo-ts-wrapper.git",
     "repository": {
         "type": "git",

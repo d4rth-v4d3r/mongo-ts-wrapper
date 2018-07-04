@@ -1,4 +1,4 @@
-This packages provides the following classes to use in Typescript (under the hood we use the native mongo javascript client):
+This package provides the following classes to use in Typescript (under the hood we use the native mongo javascript client):
 
 ```javascript
 import { Collection, Container, Model } from "mongo-ts-wrapper";
