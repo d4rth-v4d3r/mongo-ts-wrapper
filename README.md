@@ -38,7 +38,7 @@ And use your models wherever you need:
 let result = await User.insertOne({email: "john.doe@mail.com", password: "123"});  //This is a promise
 
 if(result.result.ok)
-	doSomethingCool();
+  doSomethingCool();
 
 let user = await User.findOne({email: "john.doe@mail.com"})
 ```
