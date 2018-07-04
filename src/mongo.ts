@@ -9,6 +9,7 @@ import {
     InsertWriteOpResult,
     Logger,
     MongoClient,
+    MongoClientOptions,
     ObjectID,
     ReplaceOneOptions,
     UpdateWriteOpResult,
@@ -164,14 +165,16 @@ export class Model<T extends Model<T>> {
 export class Container {
     private client: MongoClient;
 
-    constructor(private uri: string, logLevel: string = "debug") {
-        this.client = new MongoClient(this.uri);
-        Logger.setLevel(logLevel);
-        Logger.filter("class", ["Server"]);
-    }
+    constructor(
+        private uri: string,
+        private options: MongoClientOptions = { loggerLevel: "error" }
+    ) {}
 
     public async addModels(models: Array<typeof Model>): Promise<any> {
-        this.client = await this.client.connect();
+        this.client = await MongoClient.connect(
+            this.uri,
+            this.options
+        );
         return Promise.all(
             _.map(models, model => {
                 model.client = this.client;
@@ -189,6 +192,5 @@ export class Container {
 export const Collection = (collection: string) => {
     return (target: typeof Model) => {
         target.collection = collection;
-        console.log(`Binding collection ${target}`);
     };
 };

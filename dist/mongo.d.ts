@@ -1,4 +1,4 @@
-import { CollectionInsertOneOptions, CommonOptions, FilterQuery, FindOneOptions, InsertOneWriteOpResult, InsertWriteOpResult, MongoClient, ObjectID, ReplaceOneOptions, UpdateWriteOpResult, WriteOpResult } from "mongodb";
+import { CollectionInsertOneOptions, CommonOptions, FilterQuery, FindOneOptions, InsertOneWriteOpResult, InsertWriteOpResult, MongoClient, MongoClientOptions, ObjectID, ReplaceOneOptions, UpdateWriteOpResult, WriteOpResult } from "mongodb";
 export declare class Model<T extends Model<T>> {
     static client: MongoClient;
     static collection: string;
@@ -14,8 +14,9 @@ export declare class Model<T extends Model<T>> {
 }
 export declare class Container {
     private uri;
+    private options;
     private client;
-    constructor(uri: string, logLevel?: string);
+    constructor(uri: string, options?: MongoClientOptions);
     addModels(models: Array<typeof Model>): Promise<any>;
     close(): Promise<any>;
 }

@@ -127,15 +127,13 @@ class Model {
 }
 exports.Model = Model;
 class Container {
-    constructor(uri, logLevel = "debug") {
+    constructor(uri, options = { loggerLevel: "error" }) {
         this.uri = uri;
-        this.client = new mongodb_1.MongoClient(this.uri);
-        mongodb_1.Logger.setLevel(logLevel);
-        mongodb_1.Logger.filter("class", ["Server"]);
+        this.options = options;
     }
     addModels(models) {
         return __awaiter(this, void 0, void 0, function* () {
-            this.client = yield this.client.connect();
+            this.client = yield mongodb_1.MongoClient.connect(this.uri, this.options);
             return Promise.all(_.map(models, model => {
                 model.client = this.client;
                 return Promise.resolve();
@@ -151,7 +149,6 @@ exports.Container = Container;
 exports.Collection = (collection) => {
     return (target) => {
         target.collection = collection;
-        console.log(`Binding collection ${target}`);
     };
 };
 //# sourceMappingURL=mongo.js.map
