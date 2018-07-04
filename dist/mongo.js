@@ -11,14 +11,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const mongodb_1 = require("mongodb");
 class Model {
-    static findAll(query) {
+    static findAll(query, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .find(query)
+                    .find(query, options)
                     .toArray();
             }
             catch (reason) {
@@ -26,84 +26,98 @@ class Model {
             }
         });
     }
-    static findOne(query) {
+    static findOne(query, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .findOne(query);
+                    .findOne(query, options);
             }
             catch (reason) {
                 return Promise.reject(reason);
             }
         });
     }
-    static insertOne(document) {
+    static insertOne(document, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .insertOne(document);
+                    .insertOne(document, options);
             }
             catch (reason) {
                 return Promise.reject(reason);
             }
         });
     }
-    static insertMany(documents) {
+    static insertMany(documents, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .insertMany(documents);
+                    .insertMany(documents, options);
             }
             catch (reason) {
                 return Promise.reject(reason);
             }
         });
     }
-    static updateOne(query, newUpdateValues) {
+    static updateOne(query, newUpdateValues, options = { upsert: true }) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .updateOne(query, newUpdateValues, { upsert: true });
+                    .updateOne(query, newUpdateValues, options);
             }
             catch (reason) {
                 return Promise.reject(reason);
             }
         });
     }
-    static updateMany(query, newUpdateValues) {
+    static updateMany(query, newUpdateValues, options = { upsert: true }) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .updateOne(query, newUpdateValues, { upsert: true });
+                    .updateOne(query, newUpdateValues, options);
             }
             catch (reason) {
                 return Promise.reject(reason);
             }
         });
     }
-    static remove(document) {
+    static remove(document, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 return self.client
                     .db()
                     .collection(self.collection)
-                    .remove(document);
+                    .remove(document, options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static distinct(key, document, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .distinct(key, document, options);
             }
             catch (reason) {
                 return Promise.reject(reason);

@@ -1,12 +1,16 @@
 import * as _ from "lodash";
 
 import {
+    CollectionInsertOneOptions,
+    CommonOptions,
     FilterQuery,
+    FindOneOptions,
     InsertOneWriteOpResult,
     InsertWriteOpResult,
     Logger,
     MongoClient,
     ObjectID,
+    ReplaceOneOptions,
     UpdateWriteOpResult,
     WriteOpResult
 } from "mongodb";
@@ -18,7 +22,8 @@ export class Model<T extends Model<T>> {
 
     static async findAll<T extends Model<T>>(
         this: new () => T,
-        query: FilterQuery<T>
+        query: FilterQuery<T>,
+        options?: FindOneOptions
     ): Promise<Array<T>> {
         let self: typeof Model = this as any;
 
@@ -26,7 +31,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .find(query)
+                .find(query, options)
                 .toArray();
         } catch (reason) {
             return Promise.reject(reason);
@@ -35,7 +40,8 @@ export class Model<T extends Model<T>> {
 
     static async findOne<T extends Model<T>>(
         this: new () => T,
-        query: FilterQuery<T>
+        query: FilterQuery<T>,
+        options?: FindOneOptions
     ): Promise<T> {
         let self: typeof Model = this as any;
 
@@ -43,7 +49,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .findOne(query);
+                .findOne(query, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
@@ -51,7 +57,8 @@ export class Model<T extends Model<T>> {
 
     static async insertOne<T extends Model<T>>(
         this: new () => T,
-        document: T
+        document: T,
+        options?: CollectionInsertOneOptions
     ): Promise<InsertOneWriteOpResult> {
         let self: typeof Model = this as any;
 
@@ -59,7 +66,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .insertOne(document);
+                .insertOne(document, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
@@ -67,7 +74,8 @@ export class Model<T extends Model<T>> {
 
     static async insertMany<T extends Model<T>>(
         this: new () => T,
-        documents: Array<FilterQuery<T> | T>
+        documents: Array<FilterQuery<T> | T>,
+        options?: CollectionInsertOneOptions
     ): Promise<InsertWriteOpResult> {
         let self: typeof Model = this as any;
 
@@ -75,7 +83,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .insertMany(documents);
+                .insertMany(documents, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
@@ -84,7 +92,8 @@ export class Model<T extends Model<T>> {
     static async updateOne<T extends Model<T>>(
         this: new () => T,
         query: FilterQuery<T>,
-        newUpdateValues: Object
+        newUpdateValues: Object,
+        options: ReplaceOneOptions = { upsert: true }
     ): Promise<UpdateWriteOpResult> {
         let self: typeof Model = this as any;
 
@@ -92,7 +101,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .updateOne(query, newUpdateValues, { upsert: true });
+                .updateOne(query, newUpdateValues, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
@@ -101,7 +110,8 @@ export class Model<T extends Model<T>> {
     static async updateMany<T extends Model<T>>(
         this: new () => T,
         query: FilterQuery<T>,
-        newUpdateValues: Object
+        newUpdateValues: Object,
+        options: ReplaceOneOptions = { upsert: true }
     ): Promise<UpdateWriteOpResult> {
         let self: typeof Model = this as any;
 
@@ -109,7 +119,7 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .updateOne(query, newUpdateValues, { upsert: true });
+                .updateOne(query, newUpdateValues, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
@@ -117,7 +127,8 @@ export class Model<T extends Model<T>> {
 
     static async remove<T extends Model<T>>(
         this: new () => T,
-        document: FilterQuery<T>
+        document: FilterQuery<T>,
+        options?: CommonOptions
     ): Promise<WriteOpResult> {
         let self: typeof Model = this as any;
 
@@ -125,7 +136,25 @@ export class Model<T extends Model<T>> {
             return self.client
                 .db()
                 .collection(self.collection)
-                .remove(document);
+                .remove(document, options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async distinct<T extends Model<T>>(
+        this: new () => T,
+        key: string,
+        document: FilterQuery<T>,
+        options?: object
+    ): Promise<WriteOpResult> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .distinct(key, document, options);
         } catch (reason) {
             return Promise.reject(reason);
         }
