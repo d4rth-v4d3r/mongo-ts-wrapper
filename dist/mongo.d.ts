@@ -1,8 +1,12 @@
-import { CollectionInsertOneOptions, CommonOptions, FilterQuery, FindOneOptions, InsertOneWriteOpResult, InsertWriteOpResult, MongoClient, MongoClientOptions, ObjectID, ReplaceOneOptions, UpdateWriteOpResult, WriteOpResult } from "mongodb";
+import { CollectionInsertOneOptions, CommonOptions, FilterQuery, FindOneOptions, IndexOptions, InsertOneWriteOpResult, InsertWriteOpResult, MongoClient, MongoClientOptions, ObjectID, ReplaceOneOptions, UpdateWriteOpResult, WriteOpResult } from "mongodb";
 export declare class Model<T extends Model<T>> {
     static client: MongoClient;
     static collection: string;
     _id?: ObjectID;
+    static createIndex<T extends Model<T>>(this: new () => T, fieldOrSpec: any, options?: IndexOptions): Promise<string>;
+    static dropIndex<T extends Model<T>>(this: new () => T, indexName: string, options?: CommonOptions & {
+        maxTimeMS?: number;
+    }): Promise<string>;
     static findAll<T extends Model<T>>(this: new () => T, query: FilterQuery<T>, options?: FindOneOptions): Promise<Array<T>>;
     static findOne<T extends Model<T>>(this: new () => T, query: FilterQuery<T>, options?: FindOneOptions): Promise<T>;
     static insertOne<T extends Model<T>>(this: new () => T, document: T, options?: CollectionInsertOneOptions): Promise<InsertOneWriteOpResult>;

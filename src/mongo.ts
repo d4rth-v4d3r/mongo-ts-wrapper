@@ -5,6 +5,7 @@ import {
     CommonOptions,
     FilterQuery,
     FindOneOptions,
+    IndexOptions,
     InsertOneWriteOpResult,
     InsertWriteOpResult,
     Logger,
@@ -20,6 +21,45 @@ export class Model<T extends Model<T>> {
     public static client: MongoClient;
     public static collection: string;
     public _id?: ObjectID;
+
+    static async createIndex<T extends Model<T>>(
+        this: new () => T,
+        fieldOrSpec: any,
+        options?: IndexOptions
+    ): Promise<string> {
+        let self: typeof Model = this as any;
+
+        try {
+            let collection = self.client.db().collection(self.collection);
+
+            if (options && options.name) {
+                let exists = await collection.indexExists(options.name);
+
+                if (exists) return Promise.resolve("");
+                else collection.createIndex(fieldOrSpec, options);
+            }
+            return collection.createIndex(fieldOrSpec, options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async dropIndex<T extends Model<T>>(
+        this: new () => T,
+        indexName: string,
+        options?: CommonOptions & { maxTimeMS?: number }
+    ): Promise<string> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .dropIndex(indexName, options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
 
     static async findAll<T extends Model<T>>(
         this: new () => T,

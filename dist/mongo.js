@@ -11,6 +11,39 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const mongodb_1 = require("mongodb");
 class Model {
+    static createIndex(fieldOrSpec, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                let collection = self.client.db().collection(self.collection);
+                if (options && options.name) {
+                    let exists = yield collection.indexExists(options.name);
+                    if (exists)
+                        return Promise.resolve("");
+                    else
+                        collection.createIndex(fieldOrSpec, options);
+                }
+                return collection.createIndex(fieldOrSpec, options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static dropIndex(indexName, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .dropIndex(indexName, options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
     static findAll(query, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
