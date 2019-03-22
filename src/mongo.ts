@@ -14,13 +14,30 @@ import {
     ObjectID,
     ReplaceOneOptions,
     UpdateWriteOpResult,
-    WriteOpResult
+    WriteOpResult,
+    FindOneAndReplaceOption,
+    FindAndModifyWriteOpResultObject,
+    CollectionAggregationOptions,
+    AggregationCursor
 } from "mongodb";
 
 export class Model<T extends Model<T>> {
     public static client: MongoClient;
     public static collection: string;
     public _id?: ObjectID;
+
+    static async drop(options?: any): Promise<any> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .drop(options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
 
     static async createIndex<T extends Model<T>>(
         this: new () => T,
@@ -32,12 +49,6 @@ export class Model<T extends Model<T>> {
         try {
             let collection = self.client.db().collection(self.collection);
 
-            if (options && options.name) {
-                let exists = await collection.indexExists(options.name);
-
-                if (exists) return Promise.resolve("");
-                else collection.createIndex(fieldOrSpec, options);
-            }
             return collection.createIndex(fieldOrSpec, options);
         } catch (reason) {
             return Promise.reject(reason);
@@ -148,6 +159,44 @@ export class Model<T extends Model<T>> {
         }
     }
 
+    static async findOneAndUpdate<T extends Model<T>>(
+        this: new () => T,
+        query: FilterQuery<T>,
+        newUpdateValues: Object,
+        options: FindOneAndReplaceOption = {
+            upsert: true,
+            returnOriginal: false
+        }
+    ): Promise<FindAndModifyWriteOpResultObject> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .findOneAndUpdate(query, newUpdateValues, options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
+    static async aggregate<T extends Model<T>>(
+        this: new () => T,
+        pipeline: Object[],
+        options: CollectionAggregationOptions
+    ): Promise<AggregationCursor> {
+        let self: typeof Model = this as any;
+
+        try {
+            return self.client
+                .db()
+                .collection(self.collection)
+                .aggregate(pipeline, options);
+        } catch (reason) {
+            return Promise.reject(reason);
+        }
+    }
+
     static async updateMany<T extends Model<T>>(
         this: new () => T,
         query: FilterQuery<T>,
@@ -211,10 +260,7 @@ export class Container {
     ) {}
 
     public async addModels(models: Array<typeof Model>): Promise<any> {
-        this.client = await MongoClient.connect(
-            this.uri,
-            this.options
-        );
+        this.client = await MongoClient.connect(this.uri, this.options);
         return Promise.all(
             _.map(models, model => {
                 model.client = this.client;
@@ -226,6 +272,10 @@ export class Container {
     public close(): Promise<any> {
         Logger.reset();
         return this.client.close(true);
+    }
+
+    public async drop(): Promise<any> {
+        return this.client.db().dropDatabase();
     }
 }
 

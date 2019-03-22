@@ -31,11 +31,20 @@ test("Testing for decorators to identify a class", async () => {
     expect(Testing.collection).toBe(testing);
 });
 
-test("Test the mongodb container developed by juky", async () => {
-    let repository: Container = new Container("mongodb://localhost:27017/npm");
-    try {
-        await repository.addModels([Unit, Testing]);
+let repository: Container = null;
 
+beforeEach(async () => {
+    repository = new Container("mongodb://localhost:27017/npm");
+    await repository.addModels([Unit, Testing, Mongo]);
+});
+
+afterEach(async () => {
+    await repository.drop();
+    await repository.close();
+});
+
+test("Test the mongodb container developed by juky", async () => {
+    try {
         let dummy: Testing = { name: "asdfasdfafdas", date: new Date() };
 
         let result = await Testing.insertOne(dummy);
@@ -43,16 +52,24 @@ test("Test the mongodb container developed by juky", async () => {
         expect(result.result.ok).toBe(1);
     } catch (reason) {
         fail(reason.message);
-    } finally {
-        await repository.close();
+    }
+});
+
+test("Test the mongodb container to add indexes juky", async () => {
+    try {
+        let result = Unit.createIndex(
+            { name: 1 },
+            { unique: true, name: "xxx" }
+        );
+
+        expect(result).toBeDefined();
+    } catch (reason) {
+        fail(reason.message);
     }
 });
 
 test("Test the mongodb container upserts developed by juky", async () => {
-    let repository: Container = new Container("mongodb://localhost:27017/npm");
     try {
-        await repository.addModels([Mongo]);
-
         let result = await Mongo.remove({}); //Remove all documents
         expect(result.result.ok).toBe(1);
 
@@ -79,7 +96,5 @@ test("Test the mongodb container upserts developed by juky", async () => {
         expect(objects).toHaveLength(3);
     } catch (reason) {
         fail(reason.message);
-    } finally {
-        await repository.close();
     }
 });

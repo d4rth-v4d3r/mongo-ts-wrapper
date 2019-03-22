@@ -11,18 +11,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const mongodb_1 = require("mongodb");
 class Model {
+    static drop(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .drop(options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
     static createIndex(fieldOrSpec, options) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
             try {
                 let collection = self.client.db().collection(self.collection);
-                if (options && options.name) {
-                    let exists = yield collection.indexExists(options.name);
-                    if (exists)
-                        return Promise.resolve("");
-                    else
-                        collection.createIndex(fieldOrSpec, options);
-                }
                 return collection.createIndex(fieldOrSpec, options);
             }
             catch (reason) {
@@ -115,6 +122,37 @@ class Model {
             }
         });
     }
+    static findOneAndUpdate(query, newUpdateValues, options = {
+        upsert: true,
+        returnOriginal: false
+    }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .findOneAndUpdate(query, newUpdateValues, options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
+    static aggregate(pipeline, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let self = this;
+            try {
+                return self.client
+                    .db()
+                    .collection(self.collection)
+                    .aggregate(pipeline, options);
+            }
+            catch (reason) {
+                return Promise.reject(reason);
+            }
+        });
+    }
     static updateMany(query, newUpdateValues, options = { upsert: true }) {
         return __awaiter(this, void 0, void 0, function* () {
             let self = this;
@@ -176,6 +214,11 @@ class Container {
     close() {
         mongodb_1.Logger.reset();
         return this.client.close(true);
+    }
+    drop() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.client.db().dropDatabase();
+        });
     }
 }
 exports.Container = Container;
